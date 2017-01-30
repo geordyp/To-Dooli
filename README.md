@@ -2,7 +2,7 @@
 A to do list web application. The application is deadline driven so every task needs a deadline and it prioritizes tasks based on their due date. Works with the RESTful web service created in [Experimental-Server](http://www.github.com/geordyp/Experimental-Server).
 
 ## View Project
-[http://www.geordywilliams.com/projects/ToDooli/](http://www.geordywilliams.com/projects/ToDooli/)
+[http://www.geordywilliams.com/projects/To-Dooli/](http://www.geordywilliams.com/projects/To-Dooli/)
 
 ## Technologies Used
 * Knockout JS
