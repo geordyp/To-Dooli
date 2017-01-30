@@ -37,7 +37,7 @@
         <!-- ko foreach: tasks -->
         <tr>
           <td style="max-width:300px; overflow:auto;"><p><i data-bind="text: commitment"></i><br><b data-bind="text: name"></b></p><p data-bind="text: notes"></p></td>
-          <td style="width:100px; overflow:auto;"><b data-bind="text: dueDate"></b></td>
+          <td style="width:100px; overflow:auto;"><b data-bind="text: dueDateString"></b></td>
           <td style="width:100px; overflow:auto;"><b data-bind="text: daysLeft"></b></td>
           <td style="width:146px; overflow:auto;">
             <button data-bind="click: $parent.toggleDone" class="btn"><img id="btn-img" title="Done" alt="done button" src="img/done.png"></button>
@@ -142,7 +142,7 @@
     <div class="modal-body">
       <form class="form-horizontal">
         <div class="control-group">
-          <label class="control-label" for="inputVision">Display tasks in <a href="#" data-toggle="popover" data-content="The 'On Deck' view will gather the tasks that are due within the amount of days you specify here.">On Deck</a> that are due within __ days</label>
+          <label class="control-label" for="inputVision">Display tasks in <a href="javascript:void(0)" data-toggle="popover" data-content="The 'On Deck' view will gather the tasks that are due within the amount of days you specify here.">On Deck</a> that are due within __ days</label>
           <div class="controls">
             <input data-bind="value: vision" type="number" id="inputVision" max=60 min=1 style="width:150px;">
           </div>
@@ -184,7 +184,7 @@
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputHeadsUp">Add to <a href="#" data-toggle="popover" title="What is On Deck?" data-content="The 'On Deck' view will gather the tasks that are due within a specified number of days (specified in settings). If a task will need your attention before then, you can use this box to specify a day for it to be added to your 'On Deck' view.">On Deck</a></label>
+          <label class="control-label" for="inputHeadsUp">Add to <a href="javascript:void(0)" data-toggle="popover" title="What is On Deck?" data-content="The 'On Deck' view will gather the tasks that are due within a specified number of days (specified in settings). If a task will need your attention before then, you can use this box to specify a day for it to be added to your 'On Deck' view.">On Deck</a></label>
           <div class="controls">
             <input data-bind="value: headsUp" type="date" id="inputHeadsUp" style="width: 150px;">
           </div>
@@ -232,7 +232,7 @@
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputHeadsUp">Add to <a href="#" data-toggle="popover" title="What is On Deck?" data-content="The 'On Deck' view will gather the tasks that are due within a specified number of days (specified in settings). If a task will need your attention before then, you can use this box to specify a day for it to be added to your 'On Deck' view.">On Deck</a></label>
+          <label class="control-label" for="inputHeadsUp">Add to <a href="javascript:void(0)" data-toggle="popover" title="What is On Deck?" data-content="The 'On Deck' view will gather the tasks that are due within a specified number of days (specified in settings). If a task will need your attention before then, you can use this box to specify a day for it to be added to your 'On Deck' view.">On Deck</a></label>
           <div class="controls">
             <input data-bind="value: headsUp" type="date" id="inputHeadsUp" style="width: 150px;">
           </div>
