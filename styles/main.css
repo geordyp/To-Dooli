@@ -26,6 +26,11 @@
   font-size: 1.2em;
 }
 
+#btn-img {
+  width: 20px;
+  height: 20px;
+}
+
 .modal-header {
   background-color: #293241;
   border-bottom: none;
