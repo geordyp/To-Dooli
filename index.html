@@ -31,6 +31,7 @@
         <li id="pill-done" data-bind="click: getDoneTasks"><a id="pill" href="javascript:void(0)">Done</a></li>
       </ul>
     </nav>
+    <span data-bind="if: user"><button data-bind="click: openAdd" style="margin:10px;" class="btn pull-right">Add Task</button></span>
     <span data-bind="ifnot: doneView">
       <table class="table table-striped">
         <tr><td style="max-width:300px; overflow:auto;"><b>Task</b></td><td style="width:100px; overflow:auto;"><b>Due Date</b></td><td style="width:100px; overflow:auto;"><b>Days Left</b></td><td style="width:146px; overflow:auto;"><b>Options</b></td></tr>
@@ -64,7 +65,6 @@
         <!-- /ko -->
       </table>
     </span>
-    <span data-bind="if: user"><button data-bind="click: openAdd" class="btn">Add Task</button></span>
   </div>
 
   <div id="login" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="loginDialogLabel" aria-hidden="true">
