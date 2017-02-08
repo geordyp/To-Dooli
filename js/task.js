@@ -1,31 +1,44 @@
-function AddTaskViewModel() {
+function TaskAddViewModel() {
   var self = this;
   self.name = ko.observable("");
-  self.commitment = ko.observable("");
+  self.taskGroup = ko.observable("");
   self.dueDate = ko.observable("");
   self.headsUp = ko.observable("");
   self.notes = ko.observable("");
 
-  self.addTask = function() {
+  self.clearValues = function() {
+    self.name("");
+    self.taskGroup("");
+    self.dueDate("");
+    self.headsUp("");
+    self.notes("");
+    $("#taskAddErrorMessage").html("");
+  }
+
+  self.taskAdd = function() {
     // check if the needed fields are filled
-    if (self.name() === "" || self.commitment() === "" || self.dueDate() === "") {
-      $("#addTaskErrorMessage").html("Please fill in Task, Commitment, and Due Date.");
+    if (self.name() === "" || self.taskGroup() === "" || self.dueDate() === "") {
+      $("#taskAddErrorMessage").html("Please fill in Task, Task Group, and Due Date.");
     }
     else {
-      tasksViewModel.addTask({
+      var dueDatePieces = self.dueDate().split("-");
+      var dueDate = dueDatePieces[1] + "-" + dueDatePieces[2] + "-" + dueDatePieces[0];
+
+      if (self.headsUp() !== "") {
+        var headsUpPieces = self.headsUp().split("-");
+        var headsUp = headsUpPieces[1] + "-" + headsUpPieces[2] + "-" + headsUpPieces[0];
+      }
+      else {
+        var headsUp = "";
+      }
+
+      tasksViewModel.taskAdd({
         name: self.name(),
-        commitment: self.commitment(),
-        due_date: self.dueDate(),
-        heads_up: self.headsUp(),
+        task_group: self.taskGroup(),
+        due_date: dueDate,
+        heads_up: headsUp,
         notes: self.notes()
       });
-
-      self.name("");
-      self.commitment("");
-      self.dueDate("");
-      self.headsUp("");
-      self.notes("");
-      $("#addTaskErrorMessage").html("");
     }
   }
 }
@@ -93,9 +106,9 @@ function DeleteTaskViewModel() {
 }
 
 
-var addTaskViewModel = new AddTaskViewModel();
+var taskAddViewModel = new TaskAddViewModel();
 var editTaskViewModel = new EditTaskViewModel();
 var deleteTaskViewModel = new DeleteTaskViewModel();
-ko.applyBindings(addTaskViewModel, $("#addTask")[0]);
+ko.applyBindings(taskAddViewModel, $("#taskAdd")[0]);
 ko.applyBindings(editTaskViewModel, $("#editTask")[0]);
 ko.applyBindings(deleteTaskViewModel, $("#deleteTask")[0]);

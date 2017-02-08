@@ -46,8 +46,8 @@ function TasksViewModel() {
     userDeleteViewModel.setUser(self.user());
   }
 
-  self.openAdd = function() {
-    $("#addTask").modal("show");
+  self.openTaskAdd = function() {
+    $("#taskAdd").modal("show");
   }
 
   self.openEdit = function(task) {
@@ -181,15 +181,32 @@ function TasksViewModel() {
     });
   }
 
-  self.addTask = function(task) {
+  self.taskAdd = function(task) {
     self.ajax(self.user().createTaskURI, "POST", task).done(function(data) {
-      $("#addTask").modal("hide");
-
+      $("#taskAdd").modal("hide");
+      taskAddViewModel.clearValues();
       self.tasks([]);
       self.getActiveTasks();
     }).fail(function(jqXHR) {
       // console.error(jqXHR);
-      $("#addTaskErrorMessage").html("We couldn't create the task.");
+      if (jqXHR.responseText.includes("Invalid task name")) {
+        $("#taskAddErrorMessage").html("Invalid task name.");
+      }
+      else if (jqXHR.responseText.includes("Invalid task group")) {
+        $("#taskAddErrorMessage").html("Invalid task group.");
+      }
+      else if (jqXHR.responseText.includes("Invalid due date")) {
+        $("#taskAddErrorMessage").html("Invalid due date.");
+      }
+      else if (jqXHR.responseText.includes("Invalid heads up")) {
+        $("#taskAddErrorMessage").html("Invalid add to on deck date.");
+      }
+      else if (jqXHR.responseText.includes("Invalid notes")) {
+        $("#taskAddErrorMessage").html("Invalid notes.");
+      }
+      else {
+        $("#taskAddErrorMessage").html("We couldn't create the task. Please try again.");
+      }
     });
   }
 
