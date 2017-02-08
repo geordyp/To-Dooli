@@ -55,8 +55,9 @@ function TasksViewModel() {
     taskEditViewModel.setTask(task);
   }
 
-  self.openDelete = function(task) {
-    deleteTaskViewModel.setTask(task);
+  self.openTaskDelete = function(task) {
+    $("#taskDelete").modal("show");
+    taskDeleteViewModel.setTask(task);
   }
 
   self.ajax = function(uri, method, data) {
@@ -242,9 +243,10 @@ function TasksViewModel() {
     });
   }
 
-  self.deleteTask = function(task) {
+  self.taskDelete = function(task) {
     self.ajax(task.uri(), 'DELETE').done(function() {
-      $('#deleteTask').modal('hide');
+      $('#taskDelete').modal('hide');
+      taskDeleteViewModel.clearValues();
 
       var taskList = self.tasks();
       var index = taskList.indexOf(task);
@@ -252,7 +254,7 @@ function TasksViewModel() {
       self.tasks(taskList);
     }).fail(function(jqXHR) {
       // console.error(jqXHR);
-      $("#deleteTaskErrorMessage").html("We couldn't delete the task.");
+      $("#taskDeleteErrorMessage").html("We couldn't delete the task. Please try again.");
     });
   }
 

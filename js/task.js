@@ -78,23 +78,26 @@ function TaskEditViewModel() {
 }
 
 
-function DeleteTaskViewModel() {
+function TaskDeleteViewModel() {
   var self = this;
   self.task = null;
   self.name = ko.observable("");
 
+  self.clearValues = function() {
+    self.name("");
+    $("#taskDeleteErrorMessage").html("");
+  }
+
   self.setTask = function(task) {
     self.task = task;
     self.name(task.name());
-
-    $("#deleteTask").modal("show");
   }
 
-  self.deleteTask = function() {
-    tasksViewModel.deleteTask(self.task);
-    $("#deleteTaskErrorMessage").html("");
+  self.taskDelete = function() {
+    tasksViewModel.taskDelete(self.task);
   }
 }
+
 
 getDueDate = function(dueDate) {
   // format date
@@ -113,9 +116,10 @@ getHeadsUp = function(headsUp) {
   }
 }
 
+
 var taskAddViewModel = new TaskAddViewModel();
 var taskEditViewModel = new TaskEditViewModel();
-var deleteTaskViewModel = new DeleteTaskViewModel();
+var taskDeleteViewModel = new TaskDeleteViewModel();
 ko.applyBindings(taskAddViewModel, $("#taskAdd")[0]);
 ko.applyBindings(taskEditViewModel, $("#taskEdit")[0]);
-ko.applyBindings(deleteTaskViewModel, $("#deleteTask")[0]);
+ko.applyBindings(taskDeleteViewModel, $("#taskDelete")[0]);
