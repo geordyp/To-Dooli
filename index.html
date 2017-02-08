@@ -5,8 +5,9 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel=stylesheet type=text/css href="styles/main.css">
-  <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="styles/main.css">
+  <!-- <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css"> -->
 </head>
 <body>
   <div id="main" class="container">
@@ -17,20 +18,33 @@
             <h1>To Dooli</h1>
           </div>
           <div class="pull-right">
-            <span data-bind="if: user"><a data-bind="click: logout" href="javascript:void(0)">Logout</a></span>
-            <span data-bind="ifnot: user"><a data-bind="click: openLogin" href="javascript:void(0)">Login</a></span>
-            <span data-bind="if: user">&nbsp;&nbsp;<a data-bind="click: openSettings" href="javascript:void(0)">Settings</a></span>
+            <span data-bind="if: user"><a data-bind="click: userLogout" href="javascript:void(0)">Logout</a></span>
+            <span data-bind="ifnot: user"><a data-bind="click: openUserLogin" href="javascript:void(0)">Login</a></span>
+            <span data-bind="if: user">
+              <div class="dropdown">
+                <a data-toggle="dropdown" href="javascript:void(0)">Settings
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a data-bind="click: openUserEditName" href="javascript:void(0)">Change Username</a></li>
+                  <li><a data-bind="click: openUserEditPassword" href="javascript:void(0)">Change Password</a></li>
+                  <li><a data-bind="click: openUserEditVision" href="javascript:void(0)">On Deck Setting</a></li>
+                  <li><a data-bind="click: openUserDelete" href="javascript:void(0)">Delete Account</a></li>
+                </ul>
+              </div>
+            </span>
           </div>
         </div>
       </div>
     </header>
-    <nav>
-      <ul class="nav nav-pills">
-        <li id="pill-active" data-bind="click: getActiveTasks"><a id="pill" href="javascript:void(0)">Active</a></li>
-        <li id="pill-ondeck" data-bind="click: getOnDeckTasks"><a id="pill" href="javascript:void(0)">On Deck</a></li>
-        <li id="pill-done" data-bind="click: getDoneTasks"><a id="pill" href="javascript:void(0)">Done</a></li>
-      </ul>
-    </nav>
+    <span data-bind="if: user">
+      <nav>
+        <ul class="nav nav-pills">
+          <li id="pill-active" data-bind="click: getActiveTasks"><a id="pill" href="javascript:void(0)">Active</a></li>
+          <li id="pill-ondeck" data-bind="click: getOnDeckTasks"><a id="pill" href="javascript:void(0)">On Deck</a></li>
+          <li id="pill-done" data-bind="click: getDoneTasks"><a id="pill" href="javascript:void(0)">Done</a></li>
+        </ul>
+      </nav>
+    </span>
     <span data-bind="if: user"><button data-bind="click: openAdd" style="margin:10px;" class="btn pull-right">Add Task</button></span>
     <span data-bind="ifnot: doneView">
       <table class="table table-striped">
@@ -67,7 +81,7 @@
     </span>
   </div>
 
-  <div id="login" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="loginDialogLabel" aria-hidden="true">
+  <div id="userLogin" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="loginDialogLabel" aria-hidden="true">
     <div class="modal-header">
       <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       <h3 id="loginDialogLabel">Login</h3>
@@ -87,32 +101,32 @@
           </div>
         </div>
         <div class="control-group">
-          <div id="loginErrorMessage" style="color:red; text-align:center;"></div>
+          <div id="userLoginErrorMessage" style="color:red; text-align:center;"></div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button data-bind="click: login" class="btn btn-primary">Login</button>
+      <button class="btn btn-primary" data-bind="click: userLogin">Login</button>
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-      <button data-bind="click: createUser" class="btn" data-dismiss="modal" aria-hidden="true">Create Account</button>
+      <button class="btn" data-bind="click: userCreate" data-dismiss="modal" aria-hidden="true">Create Account</button>
     </div>
   </div>
 
-  <div id="createUser" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="loginDialogLabel" aria-hidden="true">
+  <div id="userCreate" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="createDialogLabel" aria-hidden="true">
     <div class="modal-header">
       <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-      <h3 id="loginDialogLabel">Create Account</h3>
+      <h3 id="createDialogLabel">Create Account</h3>
     </div>
     <div class="modal-body">
       <form class="form-horizontal">
         <div class="control-group">
-          <label class="control-label" for="inputNewUsername">Username *</label>
+          <label class="control-label" for="inputUsername">Username *</label>
           <div class="controls">
             <input data-bind="value: username" type="text" id="inputUsername" placeholder="username" style="width:150px;">
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputNewPassword">Password *</label>
+          <label class="control-label" for="inputPassword">Password *</label>
           <div class="controls">
             <input data-bind="value: password" type="password" id="inputPassword" placeholder="password" style="width:150px;">
           </div>
@@ -124,17 +138,71 @@
           </div>
         </div>
         <div class="control-group">
-          <div id="createUserErrorMessage" style="color:red; text-align:center;"></div>
+          <div id="userCreateErrorMessage" style="color:red; text-align:center;"></div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button data-bind="click: createUser" class="btn btn-primary">Create Account</button>
+      <button class="btn btn-primary" data-bind="click: userCreate">Create Account</button>
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
     </div>
   </div>
 
-  <div id="settings" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="settingsDialogLabel" aria-hidden="true">
+  <div id="userEditName" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="settingsDialogLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="settingsDialogLabel">Settings</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="inputNewUsername">New Username</label>
+          <div class="controls">
+            <input data-bind="value: newUsername" type="text" id="inputNewUsername" style="width:150px;">
+          </div>
+        </div>
+        <div class="control-group">
+          <div id="userEditNameErrorMessage" style="color:red; text-align:center;"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button data-bind="click: userUpdate" class="btn btn-primary">Update</button>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+  </div>
+
+  <div id="userEditPassword" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="settingsDialogLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="settingsDialogLabel">Settings</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="inputNewPassword">New Password</label>
+          <div class="controls">
+            <input data-bind="value: newPassword" type="password" id="inputNewPassword" style="width:150px;">
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="inputVerifyNewUsername">Verify New Password</label>
+          <div class="controls">
+            <input data-bind="value: verifyNewPassword" type="password" id="inputVerifyNewUsername" style="width:150px;">
+          </div>
+        </div>
+        <div class="control-group">
+          <div id="userEditPasswordErrorMessage" style="color:red; text-align:center;"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button data-bind="click: userUpdate" class="btn btn-primary">Update</button>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+  </div>
+
+  <div id="userEditVision" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="settingsDialogLabel" aria-hidden="true">
     <div class="modal-header">
       <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       <h3 id="settingsDialogLabel">Settings</h3>
@@ -148,12 +216,33 @@
           </div>
         </div>
         <div class="control-group">
-          <div id="settingsErrorMessage" style="color:red; text-align:center;"></div>
+          <div id="userEditVisionErrorMessage" style="color:red; text-align:center;"></div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button data-bind="click: updateUser" class="btn btn-primary">Update</button>
+      <button data-bind="click: userUpdate" class="btn btn-primary">Update</button>
+      <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+  </div>
+
+  <div id="userDelete" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="deleteUserDialogLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="deleteUserDialogLabel">Delete Account</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="control-group">
+          <div style="text-align:center;">Are you sure you want to delete your account?<br></div>
+        </div>
+        <div class="control-group">
+          <div id="deleteUserErrorMessage" style="color:red; text-align:center;"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button data-bind="click: userDelete" class="btn btn-primary">Delete Account</button>
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
     </div>
   </div>
@@ -276,9 +365,13 @@
     </div>
   </div>
 
-  <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script>
-  <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-  <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
-  <script src="js/app.js"></script>
+  <!-- <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script> -->
+  <!-- <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script> -->
+  <script src="js/lib/jquery-3.1.1.js"></script>
+  <script src="js/lib/bootstrap.min.js"></script>
+  <script src="js/lib/knockout-3.2.0.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/user.js"></script>
+  <script src="js/task.js"></script>
 </body>
 </html>

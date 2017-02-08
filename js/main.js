@@ -12,28 +12,38 @@ function TasksViewModel() {
   self.doneView = ko.observable(null);
   var currentView = "";
 
-  self.openLogin = function() {
-    $("#login").modal("show");
-    loginViewModel.clearValues();
+  self.openUserLogin = function() {
+    $("#userLogin").modal("show");
+    userLoginViewModel.clearValues();
   }
 
-  self.openUserRegistration = function() {
-    $("#createUser").modal("show");
+  self.openUserCreate = function() {
+    $("#userCreate").modal("show");
+    userCreateViewModel.clearValues();
   }
 
-  self.openUsernameSetting = function() {
-    $("#settings-username").modal("show");
-    usernameSettingViewModel.setUser(self.user());
+  self.openUserEditName = function() {
+    $("#userEditName").modal("show");
+    userEditNameViewModel.clearValues();
+    userEditNameViewModel.setUser(self.user());
   }
 
-  self.openPasswordSetting = function() {
-    $("#settings-password").modal("show");
-    passwordSettingViewModel.setUser(self.user());
+  self.openUserEditPassword = function() {
+    $("#userEditPassword").modal("show");
+    userEditPasswordViewModel.clearValues();
+    userEditPasswordViewModel.setUser(self.user());
   }
 
-  self.openVisionSetting = function() {
-    $("#settings-vision").modal("show");
-    visionSettingViewModel.setUser(self.user());
+  self.openUserEditVision = function() {
+    $("#userEditVision").modal("show");
+    userEditVisionViewModel.clearValues();
+    userEditVisionViewModel.setUser(self.user());
+  }
+
+  self.openUserDelete = function() {
+    $("#userDelete").modal("show");
+    userDeleteViewModel.clearValues();
+    userDeleteViewModel.setUser(self.user());
   }
 
   self.openAdd = function() {
@@ -63,87 +73,112 @@ function TasksViewModel() {
                              "Basic " + btoa(self.serverLogin.username + ":" + self.serverLogin.password));
       },
       error: function(jqXHR) {
-        console.error("ajax error: " + jqXHR.responseText);
+        // console.error("ajax error: " + jqXHR.responseText);
       }
     };
     return $.ajax(request);
   }
 
-  self.registerUser = function(user) {
-    self.ajax(self.registerUserURI, "POST", user).done(function(data) {
-      $("#createUser").modal("hide");
-      createUserViewModel.clearValues();
-      self.user(data.user[0]);
-      self.getActiveTasks();
-    }).fail(function(jqXHR) {
-      console.error(jqXHR);
-      if (jqXHR.responseText.includes("Invalid username")) {
-        $("#createUserErrorMessage").html("Invalid username.");
-      }
-      else if (jqXHR.responseText.includes("Invalid password")) {
-        $("#createUserErrorMessage").html("Invalid password.");
-        createUserViewModel.password("");
-        createUserViewModel.verifyPassword("");
-      }
-      else if (jqXHR.responseText.includes("Username is taken")) {
-        $("#createUserErrorMessage").html("That username is taken.");
-      }
-      else {
-        $("#createUserErrorMessage").html("We couldn't create the account. Please try again.");
-      }
-    });
-  }
-
-  self.updateUser = function(userURI, data, settingViewModel) {
-    self.ajax(userURI, 'PUT', data, settingViewModel).done(function(data) {
-        $('#settings-username').modal('hide');
-        $('#settings-password').modal('hide');
-        $('#settings-vision').modal('hide');
-        settingViewModel.clearValues();
-        self.user(data.user[0]);
-    }).fail(function(jqXHR) {
-      console.error(jqXHR);
-      if (jqXHR.responseText.includes("Invalid username")) {
-        $("#usernameSettingErrorMessage").html("Invalid username.");
-      }
-      else if (jqXHR.responseText.includes("Username is taken")) {
-        $("#usernameSettingErrorMessage").html("That username is taken.");
-      }
-      else if (jqXHR.responseText.includes("Invalid password")) {
-        $("#passwordSettingErrorMessage").html("Invalid password.");
-        settingViewModel.clearValues();
-      }
-      else if (jqXHR.responseText.includes("Invalid on deck setting")) {
-        $("#passwordSettingErrorMessage").html("Invalid on deck setting.");
-      }
-      else {
-        $("#usernameSettingErrorMessage").html("We couldn't update the account. Please try again.");
-        $("#passwordSettingErrorMessage").html("We couldn't update the account. Please try again.");
-        $("#visionSettingErrorMessage").html("We couldn't update the account. Please try again.");
-      }
-    });
-  }
-
-  self.login = function(user) {
+  self.userLogin = function(user) {
     self.ajax(self.loginURI, "POST", user).done(function(data) {
-      $("#login").modal("hide");
+      $("#userLogin").modal("hide");
       self.user(data.user[0]);
       self.getActiveTasks();
     }).fail(function(jqXHR) {
-      console.error(jqXHR);
+      // console.error(jqXHR);
       if (jqXHR.responseText.includes("Invalid login")) {
-        $("#loginErrorMessage").html("Incorrect username or password.");
-        loginViewModel.password("");
+        $("#userLoginErrorMessage").html("Incorrect username or password.");
+        userLoginViewModel.password("");
       }
       else {
-        $("#loginErrorMessage").html("We couldn't log into your account. Please try again.");
+        $("#userLoginErrorMessage").html("We couldn't log into your account. Please try again.");
       }
     });
   }
 
-  self.logout = function() {
+  self.userLogout = function() {
     self.user(null);
     self.tasks([]);
+  }
+
+  self.userCreate = function(user) {
+    self.ajax(self.registerUserURI, "POST", user).done(function(data) {
+      $("#userCreate").modal("hide");
+      userCreateViewModel.clearValues();
+      self.user(data.user[0]);
+      self.getActiveTasks();
+    }).fail(function(jqXHR) {
+      // console.error(jqXHR);
+      if (jqXHR.responseText.includes("Invalid username")) {
+        $("#userCreateErrorMessage").html("Invalid username.");
+      }
+      else if (jqXHR.responseText.includes("Invalid password")) {
+        $("#userCreateErrorMessage").html("Invalid password.");
+        userCreateViewModel.password("");
+        userCreateViewModel.verifyPassword("");
+      }
+      else if (jqXHR.responseText.includes("Username is taken")) {
+        $("#userCreateErrorMessage").html("That username is taken.");
+      }
+      else {
+        $("#userCreateErrorMessage").html("We couldn't create the account. Please try again.");
+      }
+    });
+  }
+
+  self.userUpdate = function(userURI, data, setting) {
+    self.ajax(userURI, 'PUT', data).done(function(data) {
+      if (setting === 'username') {
+        $('#userEditName').modal('hide');
+        userEditNameViewModel.clearValues();
+      }
+      else if (setting === 'password') {
+        $('#userEditPassword').modal('hide');
+        userEditPasswordViewModel.clearValues();
+      }
+      else if (setting === 'vision') {
+        $('#userEditVision').modal('hide');
+        userEditVisionViewModel.clearValues();
+      }
+      self.user(data.user[0]);
+    }).fail(function(jqXHR) {
+      // console.error(jqXHR);
+      if (jqXHR.responseText.includes("Invalid username")) {
+        $("#userEditNameErrorMessage").html("Invalid username.");
+      }
+      else if (jqXHR.responseText.includes("Username is taken")) {
+        $("#userEditNameErrorMessage").html("That username is taken.");
+      }
+      else if (jqXHR.responseText.includes("Invalid password")) {
+        userEditPasswordViewModel.clearValues();
+        $("#userEditPasswordErrorMessage").html("Invalid password.");
+      }
+      else if (jqXHR.responseText.includes("Invalid on deck setting")) {
+        $("#userEditVisionErrorMessage").html("Invalid on deck setting.");
+      }
+      else {
+        if (setting === 'username') {
+          $("#userEditNameErrorMessage").html("We couldn't update the account. Please try again.");
+        }
+        else if (setting === 'password') {
+          $("#userEditPasswordErrorMessage").html("We couldn't update the account. Please try again.");
+        }
+        else if (setting === 'vision') {
+          $("#userEditVisionErrorMessage").html("We couldn't update the account. Please try again.");
+        }
+      }
+    });
+  }
+
+  self.userDelete = function(userURI) {
+    self.ajax(userURI, 'DELETE').done(function() {
+      $('#userDelete').modal('hide');
+      self.user(null);
+      self.tasks([]);
+    }).fail(function(jqXHR) {
+      // console.error(jqXHR);
+      $("#userDeleteErrorMessage").html("We couldn't delete your account. Please try again.");
+    });
   }
 
   self.addTask = function(task) {
@@ -153,7 +188,7 @@ function TasksViewModel() {
       self.tasks([]);
       self.getActiveTasks();
     }).fail(function(jqXHR) {
-      console.error(jqXHR);
+      // console.error(jqXHR);
       $("#addTaskErrorMessage").html("We couldn't create the task.");
     });
   }
@@ -170,7 +205,7 @@ function TasksViewModel() {
         else
           self.getDoneTasks();
     }).fail(function(jqXHR) {
-      console.error(jqXHR);
+      // console.error(jqXHR);
       $("#editTaskErrorMessage").html("We couldn't update the task.");
     });
   }
@@ -184,7 +219,7 @@ function TasksViewModel() {
       taskList.splice(index, 1);
       self.tasks(taskList);
     }).fail(function(jqXHR) {
-      console.error(jqXHR);
+      // console.error(jqXHR);
       $("#deleteTaskErrorMessage").html("We couldn't delete the task.");
     });
   }
@@ -217,7 +252,7 @@ function TasksViewModel() {
       taskList.splice(index, 1);
       self.tasks(taskList);
     }).fail(function(jqXHR) {
-      console.error(jqXHR);
+      // console.error(jqXHR);
     });
   }
 
@@ -287,7 +322,7 @@ function TasksViewModel() {
       case 6:
         return "Sat";
       default:
-        console.error("day out of range");
+        // console.error("day out of range");
         return;
     }
   }
@@ -319,7 +354,7 @@ function TasksViewModel() {
       case 11:
         return "Dec";
       default:
-        console.error("month out of range");
+        // console.error("month out of range");
         return;
     }
   }
