@@ -54,7 +54,7 @@
           <td style="width:100px; overflow:auto;"><b data-bind="text: dueDateString"></b></td>
           <td style="width:100px; overflow:auto;"><b data-bind="text: daysLeft"></b></td>
           <td style="width:146px; overflow:auto;">
-            <button data-bind="click: $parent.toggleDone" class="btn"><img id="btn-img" title="Done" alt="done button" src="img/done.png"></button>
+            <button data-bind="click: $parent.taskToggleDone" class="btn"><img id="btn-img" title="Done" alt="done button" src="img/done.png"></button>
             <button data-bind="click: $parent.openTaskEdit" class="btn"><img id="btn-img" title="Edit" alt="edit button" src="img/edit.png"></button>
             <button data-bind="click: $parent.openTaskDelete" class="btn"><img id="btn-img" title="Remove" alt="remove button" src="img/remove.png"></button>
           </td>
@@ -70,7 +70,7 @@
           <td style="max-width:300px; overflow:auto;"><p><i data-bind="text: taskGroup"></i><br><b data-bind="text: name"></b></p><p data-bind="text: notes"></p></td>
           <td style="width:147px; overflow:auto;"><b data-bind="text: completionDate"></b></td>
           <td style="width:146px; overflow:auto;">
-            <button data-bind="click: $parent.toggleDone" class="btn"><img id="btn-img" title="Not Done" alt="not done button" src="img/not-done.png"></button>
+            <button data-bind="click: $parent.taskToggleDone" class="btn"><img id="btn-img" title="Not Done" alt="not done button" src="img/not-done.png"></button>
             <button data-bind="click: $parent.openEdit" class="btn"><img id="btn-img" title="Edit" alt="edit button" src="img/edit.png"></button>
             <button data-bind="click: $parent.openTaskDelete" class="btn"><img id="btn-img" title="Remove" alt="remove button" src="img/remove.png"></button>
           </td>

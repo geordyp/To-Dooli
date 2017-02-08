@@ -258,7 +258,7 @@ function TasksViewModel() {
     });
   }
 
-  self.toggleDone = function(task) {
+  self.taskToggleDone = function(task) {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1;
@@ -266,7 +266,7 @@ function TasksViewModel() {
     if (dd<10) {dd='0'+dd;}
     if (mm<10) {mm='0'+mm;}
 
-    var todayStr = yyyy + "-" + mm + "-" + dd;
+    var todayStr = mm + "-" + dd + "-" + yyyy;
     if (task.done() === false) {
       data = {
         done: true,
