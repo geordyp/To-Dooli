@@ -1,10 +1,10 @@
 function TasksViewModel() {
   var self = this;
-  self.loginURI = "http://138.197.77.126/ondeck/api/v1.0/user/login";
-  self.registerUserURI = "http://138.197.77.126/ondeck/api/v1.0/user";
+  self.loginURI = "http://localhost:5000/ondeck/api/v1.0/user/login";
+  self.registerUserURI = "http://localhost:5000/ondeck/api/v1.0/user";
   self.serverLogin = {
-    username: "geordypaul",
-    password: "Appl3B3ar"
+    username: "me",
+    password: "password"
   };
 
   self.user = ko.observable(null);
@@ -56,17 +56,29 @@ function TasksViewModel() {
   }
 
   self.registerUser = function(user) {
-    self.ajax(self.registerUserURI, "POST", user).done(function(data) {
+    self.ajax(self.registerUserURI, "POST", user, createUserViewModel).done(function(data) {
       $("#createUser").modal("hide");
+      $("#createUserErrorMessage").html("");
+      createUserViewModel.username("");
+      createUserViewModel.password("");
+      createUserViewModel.verifyPassword("");
       self.user(data.user[0]);
       self.getActiveTasks();
     }).fail(function(jqXHR) {
       console.error(jqXHR);
-      if (jqXHR.responseText.includes("This username is taken")) {
-        $("#createUserErrorMessage").html("The username is taken.");
+      if (jqXHR.responseText.includes("Invalid username")) {
+        $("#createUserErrorMessage").html("Invalid username.");
+      }
+      else if (jqXHR.responseText.includes("Invalid password")) {
+        $("#createUserErrorMessage").html("Invalid password.");
+        createUserViewModel.password("");
+        createUserViewModel.verifyPassword("");
+      }
+      else if (jqXHR.responseText.includes("Username is taken")) {
+        $("#createUserErrorMessage").html("That username is taken.");
       }
       else {
-        $("#createUserErrorMessage").html("We couldn't create the account.");
+        $("#createUserErrorMessage").html("We couldn't create the account. Try again.");
       }
     });
   }
@@ -308,22 +320,8 @@ function CreateUserViewModel() {
   self.verifyPassword = ko.observable("");
 
   self.createUser = function() {
-    var reUsername = /^[a-zA-Z0-9]+$/;
-    var rePassword = /^.{3,20}$/;
-
-    // validate username
-    if (!reUsername.test(self.username())) {
-      $("#createUserErrorMessage").html("Invalid username.");
-      self.username("");
-    }
-    // validate password
-    else if (!rePassword.test(self.password())) {
-      $("#createUserErrorMessage").html("Invalid password.");
-      self.password("");
-      self.verifyPassword("");
-    }
     // check if passwords match
-    else if (self.password() !== self.verifyPassword()) {
+    if (self.password() !== self.verifyPassword()) {
       $("#createUserErrorMessage").html("The passwords don't match.");
       self.password("");
       self.verifyPassword("");
@@ -336,12 +334,7 @@ function CreateUserViewModel() {
       tasksViewModel.registerUser({
         name: self.username(),
         password: self.password()
-      });
-
-      self.username("");
-      self.password("");
-      self.verifyPassword("");
-      $("#createUserErrorMessage").html("");
+      }, self);
     }
   }
 }
