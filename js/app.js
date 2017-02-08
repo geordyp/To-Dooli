@@ -48,6 +48,7 @@ function TasksViewModel() {
       console.error(jqXHR);
       if (jqXHR.responseText.includes("Invalid login")) {
         $("#loginErrorMessage").html("Incorrect username or password.");
+        loginViewModel.password("");
       }
       else {
         $("#loginErrorMessage").html("We couldn't log into your account. Please try again.");
