@@ -392,6 +392,8 @@ function TasksViewModel() {
         return;
     }
   }
+
+  self.openUserLogin();
 }
 
 
