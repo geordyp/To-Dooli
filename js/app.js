@@ -36,13 +36,22 @@ function TasksViewModel() {
     $("#login").modal("show");
   }
 
-  self.login = function(user) {
-    self.ajax(self.loginURI, "POST", user).done(function(data) {
+  self.login = function(user, loginViewModel) {
+    self.ajax(self.loginURI, "POST", user, loginViewModel).done(function(data) {
       $("#login").modal("hide");
+      $("#loginErrorMessage").html("");
+      loginViewModel.username("");
+      loginViewModel.password("");
       self.user(data.user[0])
       self.getActiveTasks()
     }).fail(function(jqXHR) {
-      $("#loginErrorMessage").html("Incorrect username or password.");
+      console.error(jqXHR);
+      if (jqXHR.responseText.includes("Invalid login")) {
+        $("#loginErrorMessage").html("Incorrect username or password.");
+      }
+      else {
+        $("#loginErrorMessage").html("We couldn't log into your account. Please try again.");
+      }
     });
   }
 
@@ -55,7 +64,7 @@ function TasksViewModel() {
     $("#createUser").modal("show");
   }
 
-  self.registerUser = function(user) {
+  self.registerUser = function(user, createUserViewModel) {
     self.ajax(self.registerUserURI, "POST", user, createUserViewModel).done(function(data) {
       $("#createUser").modal("hide");
       $("#createUserErrorMessage").html("");
@@ -78,7 +87,7 @@ function TasksViewModel() {
         $("#createUserErrorMessage").html("That username is taken.");
       }
       else {
-        $("#createUserErrorMessage").html("We couldn't create the account. Try again.");
+        $("#createUserErrorMessage").html("We couldn't create the account. Please try again.");
       }
     });
   }
@@ -298,13 +307,16 @@ function LoginViewModel() {
   self.password = ko.observable("");
 
   self.login = function() {
-    tasksViewModel.login({
-      name: self.username(),
-      password: self.password()
-    });
-
-    self.username("");
-    self.password("");
+    // check if all fields are filled
+    if (self.username() === "" || self.password() === "") {
+      $("#loginErrorMessage").html("All inputs need to be filled.");
+    }
+    else {
+      tasksViewModel.login({
+        name: self.username(),
+        password: self.password()
+      }, self);
+    }
   }
 
   self.createUser = function() {
