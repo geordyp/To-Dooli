@@ -50,12 +50,12 @@
         <tr><td style="max-width:300px; overflow:auto;"><b>Task</b></td><td style="width:100px; overflow:auto;"><b>Due Date</b></td><td style="width:100px; overflow:auto;"><b>Days Left</b></td><td style="width:146px; overflow:auto;"><b>Options</b></td></tr>
         <!-- ko foreach: tasks -->
         <tr>
-          <td style="max-width:300px; overflow:auto;"><p><i data-bind="text: commitment"></i><br><b data-bind="text: name"></b></p><p data-bind="text: notes"></p></td>
+          <td style="max-width:300px; overflow:auto;"><p><i data-bind="text: taskGroup"></i><br><b data-bind="text: name"></b></p><p data-bind="text: notes"></p></td>
           <td style="width:100px; overflow:auto;"><b data-bind="text: dueDateString"></b></td>
           <td style="width:100px; overflow:auto;"><b data-bind="text: daysLeft"></b></td>
           <td style="width:146px; overflow:auto;">
             <button data-bind="click: $parent.toggleDone" class="btn"><img id="btn-img" title="Done" alt="done button" src="img/done.png"></button>
-            <button data-bind="click: $parent.openEdit" class="btn"><img id="btn-img" title="Edit" alt="edit button" src="img/edit.png"></button>
+            <button data-bind="click: $parent.openTaskEdit" class="btn"><img id="btn-img" title="Edit" alt="edit button" src="img/edit.png"></button>
             <button data-bind="click: $parent.openDelete" class="btn"><img id="btn-img" title="Remove" alt="remove button" src="img/remove.png"></button>
           </td>
         </tr>
@@ -67,7 +67,7 @@
         <tr><td style="max-width:300px; overflow:auto;"><b>Task</b></td><td style="width:147px; overflow:auto;"><b>Completion Date</b></td><td style="width:146px; overflow:auto;"><b>Options</b></td></tr>
         <!-- ko foreach: tasks -->
         <tr>
-          <td style="max-width:300px; overflow:auto;"><p><i data-bind="text: commitment"></i><br><b data-bind="text: name"></b></p><p data-bind="text: notes"></p></td>
+          <td style="max-width:300px; overflow:auto;"><p><i data-bind="text: taskGroup"></i><br><b data-bind="text: name"></b></p><p data-bind="text: notes"></p></td>
           <td style="width:147px; overflow:auto;"><b data-bind="text: completionDate"></b></td>
           <td style="width:146px; overflow:auto;">
             <button data-bind="click: $parent.toggleDone" class="btn"><img id="btn-img" title="Not Done" alt="not done button" src="img/not-done.png"></button>
@@ -294,7 +294,7 @@
     </div>
   </div>
 
-  <div id="editTask" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="editTaskDialogLabel" aria-hidden="true">
+  <div id="taskEdit" class="modal hide fade" tabindex="=1" role="dialog" aria-labelledby="editTaskDialogLabel" aria-hidden="true">
     <div class="modal-header">
       <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       <h3 id="editTaskDialogLabel">Edit Task</h3>
@@ -302,42 +302,42 @@
     <div class="modal-body">
       <form class="form-horizontal">
         <div class="control-group">
-          <label class="control-label" for="inputTask">Task *</label>
+          <label class="control-label" for="inputEditTask">Task *</label>
           <div class="controls">
-            <input data-bind="value: name" type="text" id="inputTask" style="width: 150px;">
+            <input data-bind="value: name" type="text" id="inputEditTask" style="width: 150px;">
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputCommitment">Commitment *</label>
+          <label class="control-label" for="inputEditTaskGroup">Task Group *</label>
           <div class="controls">
-            <input data-bind="value: commitment" type="text" id="inputCommitment" style="width: 150px;">
+            <input data-bind="value: taskGroup" type="text" id="inputEditTaskGroup" style="width: 150px;">
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputDueDate">Due Date *</label>
+          <label class="control-label" for="inputEditDueDate">Due Date *</label>
           <div class="controls">
-            <input data-bind="value: dueDate" type="date" id="inputDueDate" style="width: 150px;">
+            <input data-bind="value: dueDate" type="date" id="inputEditDueDate" style="width: 150px;">
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputHeadsUp">Add to <a href="javascript:void(0)" data-toggle="popover" title="What is On Deck?" data-content="The 'On Deck' view will gather the tasks that are due within a specified number of days (specified in settings). If a task will need your attention before then, you can use this box to specify a day for it to be added to your 'On Deck' view.">On Deck</a></label>
+          <label class="control-label" for="inputEditHeadsUp">Add to <a href="javascript:void(0)" data-toggle="popover" title="What is On Deck?" data-content="The 'On Deck' view will gather the tasks that are due within a specified number of days (specified in settings). If a task will need your attention before then, you can use this box to specify a day for it to be added to your 'On Deck' view.">On Deck</a></label>
           <div class="controls">
-            <input data-bind="value: headsUp" type="date" id="inputHeadsUp" style="width: 150px;">
+            <input data-bind="value: headsUp" type="date" id="inputEditHeadsUp" style="width: 150px;">
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="inputNotes">Notes</label>
+          <label class="control-label" for="inputEditNotes">Notes</label>
           <div class="controls">
-            <input data-bind="value: notes" type="text" id="inputNotes" style="width: 150px;">
+            <input data-bind="value: notes" type="text" id="inputEditNotes" style="width: 150px;">
           </div>
         </div>
         <div class="control-group">
-          <div id="editTaskErrorMessage" style="color:red; text-align:center;"></div>
+          <div id="taskEditErrorMessage" style="color:red; text-align:center;"></div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
-      <button data-bind="click: editTask" class="btn btn-primary">Edit Task</button>
+      <button data-bind="click: taskEdit" class="btn btn-primary">Edit Task</button>
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
     </div>
   </div>

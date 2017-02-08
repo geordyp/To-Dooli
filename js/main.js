@@ -50,9 +50,9 @@ function TasksViewModel() {
     $("#taskAdd").modal("show");
   }
 
-  self.openEdit = function(task) {
-    $("#editTask").modal("show");
-    editTaskViewModel.setTask(task);
+  self.openTaskEdit = function(task) {
+    $("#taskEdit").modal("show");
+    taskEditViewModel.setTask(task);
   }
 
   self.openDelete = function(task) {
@@ -210,20 +210,35 @@ function TasksViewModel() {
     });
   }
 
-  self.editTask = function(taskURI, task) {
+  self.taskEdit = function(taskURI, task) {
     self.ajax(taskURI, 'PUT', task).done(function(data) {
-        $('#editTask').modal('hide');
+        $('#taskEdit').modal('hide');
+        taskEditViewModel.clearValues();
 
         self.tasks([]);
-        if (currentView === "active")
-          self.getActiveTasks();
-        else if (currentView === "ondeck")
-          self.getOnDeckTasks();
-        else
-          self.getDoneTasks();
+        if (currentView === "active") self.getActiveTasks();
+        else if (currentView === "ondeck") self.getOnDeckTasks();
+        else self.getDoneTasks();
     }).fail(function(jqXHR) {
       // console.error(jqXHR);
-      $("#editTaskErrorMessage").html("We couldn't update the task.");
+      if (jqXHR.responseText.includes("Invalid task name")) {
+        $("#taskEditErrorMessage").html("Invalid task name.");
+      }
+      else if (jqXHR.responseText.includes("Invalid task group")) {
+        $("#taskEditErrorMessage").html("Invalid task group.");
+      }
+      else if (jqXHR.responseText.includes("Invalid due date")) {
+        $("#taskEditErrorMessage").html("Invalid due date.");
+      }
+      else if (jqXHR.responseText.includes("Invalid heads up")) {
+        $("#taskEditErrorMessage").html("Invalid add to on deck date.");
+      }
+      else if (jqXHR.responseText.includes("Invalid notes")) {
+        $("#taskEditErrorMessage").html("Invalid notes.");
+      }
+      else {
+        $("#taskEditErrorMessage").html("We couldn't update the task. Please try again.");
+      }
     });
   }
 
@@ -308,7 +323,7 @@ function TasksViewModel() {
         var dueDateString = getDayString(dueDate.getUTCDay()) + " " + getMonthString(dueDate.getMonth()) + " " + dueDate.getUTCDate();
         self.tasks.push({
           name: ko.observable(data.tasks[i].name),
-          commitment: ko.observable(data.tasks[i].commitment),
+          taskGroup: ko.observable(data.tasks[i].task_group),
           notes: ko.observable(data.tasks[i].notes),
           dueDateString: ko.observable(dueDateString),
           dueDate: ko.observable(data.tasks[i].due_date),
